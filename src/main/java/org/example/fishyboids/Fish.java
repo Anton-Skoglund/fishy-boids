@@ -4,10 +4,9 @@ public class Fish {
     private Boid head;
     private ProceduralBody body;
 
-    public Fish(Boid head, ProceduralBody Body){
+    public Fish(Boid head, ProceduralBody body){
         this.head = head;
         this.body = body;
-        body = new ProceduralBody(head.getCenter(), 25, i -> (1 - Math.sin(i / 20.0)) * 10 + 5);
     }
 
     public void update(){

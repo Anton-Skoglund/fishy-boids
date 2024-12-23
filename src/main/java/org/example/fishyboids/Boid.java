@@ -22,8 +22,6 @@ public class Boid{
     private Point centerPoint;
 
 
-    private Random random = new Random();
-
     public Boid(double x, double y, double velocity, double visionRadius){
         this.x = x;
         this.y = y;

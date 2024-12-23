@@ -12,6 +12,8 @@ import java.util.function.Function;
 public class ProceduralBody  {
     private Point head;
     private int amount;
+    private Function<Double, Double> bodyShape;
+    private Function<Integer, Color> colorFunction;
 
     private List<Circle> nodes;
     private List<Point> points;
@@ -22,9 +24,11 @@ public class ProceduralBody  {
     // - color function
     // - Optional function input and have a standard
 
-    public ProceduralBody(Point head, int amount, Function<Double, Double> bodyShape) {
+    public ProceduralBody(Point head, int amount, Function<Double, Double> bodyShape, Function<Integer, Color> colorFunction) {
         this.head = head;
         this.amount = amount;
+        this.bodyShape = bodyShape;
+        this.colorFunction = colorFunction;
 
         nodes = new ArrayList<>();
         lines = new ArrayList<>();
@@ -34,12 +38,16 @@ public class ProceduralBody  {
         initBody(amount, bodyShape);
     }
 
+    public ProceduralBody(Point head, int amount) {
+        this(head, amount, k -> Math.abs(Math.cos((k / (25 + 10.0)) * Math.PI)) * 10 + 5, i -> Color.rgb(0, 0 ,  Math.max(i * (255 / amount), (amount - i) * (255 / amount))));
+    }
+
     private void initBody(int amount, Function<Double, Double> bodyShape) {
         for(int i = 0; i < amount; i++){
             Random random = new Random();
             int step = 255 / amount;
 
-            Circle newCircle = new Circle(0, 0, bodyShape.apply((double) i), Color.rgb(0, 0 , (amount - i)*step));
+            Circle newCircle = new Circle(0, 0, bodyShape.apply((double) i), colorFunction.apply(i));
 
             Line newLine = new Line(0, 0, 0, 0);
             Point newPoint = new Point(0,0);

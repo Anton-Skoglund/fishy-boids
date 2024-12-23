@@ -8,21 +8,25 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 public class Main extends Application {
     private Pane root;
     private final int WIDTH = 1920;
     private final int HEIGHT = 1080;
 
-
     private List<Fish> fishes;
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @Override
     public void start(Stage primaryStage) {
@@ -32,7 +36,30 @@ public class Main extends Application {
 
         for(int i = 0; i < 50; i++){
             Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50);
-            ProceduralBody body = new ProceduralBody(head.getCenter(), 25, k -> (1 - Math.sin(k / 20.0)) * 10 + 5);
+
+            int amount = 25;
+            double scale = 10;
+            double offset = 5;
+            List<Function<Double, Double>> bodyFunctions = List.of(
+                    k -> Math.abs(Math.cos((k / (amount + 10.0)) * Math.PI)) * scale + offset,
+                    k -> Math.abs(Math.sin((k / (amount + 10.0)) * Math.PI)) * scale + offset,
+                    k -> (Math.abs(((k / (amount + 10.0)) % 1) - 0.5) * 2) * scale + offset,
+                    k -> Math.pow(Math.abs(k / (amount + 10.0) - 0.5) * 2, 2) * scale + offset,
+                    k -> Math.exp(-Math.abs(k / (amount + 10.0) - 0.5) * 2) * scale + offset,
+                    k -> (1 - Math.abs(((k / (amount + 10.0)) % 2) - 1)) * scale + offset,
+                    k -> Math.log(Math.abs(k / (amount + 10.0) - 0.5) * 10 + 1) * scale + offset,
+                    k -> Math.exp(-Math.pow((k / (amount + 10.0) - 0.5) * 2, 2)) * scale + offset
+            );
+
+            List<Function<Integer, Color>> colorFunctions = List.of(
+                    k -> Color.rgb(0, 0 ,  Math.max(k * (255 / amount), (amount - k) * (255 / amount))),
+                    k -> Color.rgb(0, Math.max(k * (255 / amount), (amount - k) * (255 / amount)) ,  0),
+                    k -> Color.rgb(Math.max(k * (255 / amount), (amount - k) * (255 / amount)), 0 ,  0)
+            );
+
+            int randomIndex = random.nextInt(bodyFunctions.size());
+
+            ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
             fishes.add(new Fish(head, body));
         }
@@ -47,8 +74,15 @@ public class Main extends Application {
         };
         timer.start();
 
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, null)));
+        LinearGradient gradient = new LinearGradient(
+                0, 0, 1, 1, // startX, startY, endX, endY
+                true, // proportional (true means relative to the container size)
+                CycleMethod.NO_CYCLE, // gradient will not repeat
+                new Stop(0, Color.BLACK), // starting color
+                new Stop(1, Color.rgb(0, 8 ,50)) // ending color
+        );
 
+        root.setBackground(new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, null)));
 
         Scene scene = new Scene(root, WIDTH, HEIGHT);
 
