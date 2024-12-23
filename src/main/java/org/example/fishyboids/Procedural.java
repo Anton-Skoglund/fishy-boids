@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.example.fishyboids.Point;
 
 
 public class Procedural extends Application  {
@@ -41,6 +40,6 @@ public class Procedural extends Application  {
     private void handleMouseMovement(MouseEvent event) {
         head.x = event.getX();
         head.y = event.getY();
-        body.move();
+        body.update();
     }
 }

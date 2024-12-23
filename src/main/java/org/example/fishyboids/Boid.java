@@ -158,20 +158,7 @@ public class Boid{
         return visionRadius;
     }
 
-
-    public Vector getDirectionVector(){
+    private Vector getDirectionVector(){
         return directionVector;
-    }
-
-    public Vector getAligmentVector(){
-        return alignmentVector;
-    }
-
-    public Vector getCohesionVector(){
-        return cohesionVector;
-    }
-
-    public Vector getSeparationVector(){
-        return separationVector;
     }
 }
