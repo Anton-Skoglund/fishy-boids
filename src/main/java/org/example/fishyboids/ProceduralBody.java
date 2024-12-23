@@ -44,8 +44,6 @@ public class ProceduralBody  {
 
     private void initBody(int amount, Function<Double, Double> bodyShape) {
         for(int i = 0; i < amount; i++){
-            Random random = new Random();
-            int step = 255 / amount;
 
             Circle newCircle = new Circle(0, 0, bodyShape.apply((double) i), colorFunction.apply(i));
 
