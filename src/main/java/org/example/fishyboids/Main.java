@@ -58,8 +58,11 @@ public class Main extends Application {
 
             int randomIndex = random.nextInt(bodyFunctions.size());
 
-            ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
             // RectangleBody body = new RectangleBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+
+            //ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+
+            ProceduralBody body = new ProceduralBody(head.getCenter(), 1, aDouble -> 10.0, integer -> Color.WHITE);
 
             fishes.add(new Fish(head, body));
         }
