@@ -1,0 +1,1 @@
+A Vector has a constant length
