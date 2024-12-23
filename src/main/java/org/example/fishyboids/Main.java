@@ -20,7 +20,7 @@ public class Main extends Application {
     private final int HEIGHT = 1080;
 
 
-    private List<Boid> boids;
+    private List<Fish> fishes;
 
     private Random random = new Random();
 
@@ -28,10 +28,13 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         root = new Pane();
 
-        boids = new ArrayList<>();
+        fishes = new ArrayList<>();
 
         for(int i = 0; i < 50; i++){
-            boids.add(new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50));
+            Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50);
+            ProceduralBody body = new ProceduralBody(head.getCenter(), 25, k -> (1 - Math.sin(k / 20.0)) * 10 + 5);
+
+            fishes.add(new Fish(head, body));
         }
 
 
@@ -59,26 +62,26 @@ public class Main extends Application {
         // canvas is better
         root.getChildren().clear();
 
-        for (Boid currentBoid : boids) {
-            root.getChildren().addAll(currentBoid.getBody().getNodes());
+        for (Fish currentFish : fishes) {
+            root.getChildren().addAll(currentFish.getBody().getNodes());
 
-            currentBoid.updatePosition();
-            screenWrapping(currentBoid);
+            currentFish.update();
+            screenWrapping(currentFish.getHead());
 
 
-            boids.forEach(neighborBoid -> {
-                if (currentBoid == neighborBoid) {
+            fishes.forEach(neighborBoid -> {
+                if (currentFish == neighborBoid) {
                     return; // can't use continues
                 }
 
-                double distance = new Vector(currentBoid.getCenter(), neighborBoid.getCenter()).getLength();
+                double distance = new Vector(currentFish.getHead().getCenter(), neighborBoid.getHead().getCenter()).getLength();
 
-                if(currentBoid.getVisionRadius() > distance){
-                    currentBoid.addNeighborBoid(neighborBoid);
+                if(currentFish.getHead().getVisionRadius() > distance){
+                    currentFish.getHead().addNeighborBoid(neighborBoid.getHead());
                     return;
                 }
 
-                currentBoid.removeNeighborBoid(neighborBoid);
+                currentFish.getHead().removeNeighborBoid(neighborBoid.getHead());
             });
         }
 

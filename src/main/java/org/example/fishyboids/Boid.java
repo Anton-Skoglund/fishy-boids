@@ -21,9 +21,6 @@ public class Boid{
 
     private Point centerPoint;
 
-    private ProceduralBody body;
-
-
 
     private Random random = new Random();
 
@@ -42,7 +39,6 @@ public class Boid{
         cohesionVector = new Vector(2);
 
 
-        body = new ProceduralBody(getCenter(), 25, i -> (1 - Math.sin(i / 20.0)) * 10 + 5);
 
         neighborsBoids = new HashSet<>();
     }
@@ -59,8 +55,6 @@ public class Boid{
         steerLogic();
 
         moveBoidsFromAngle();
-
-        body.move();
     }
 
     private void steerLogic() {
@@ -181,9 +175,5 @@ public class Boid{
 
     public Vector getSeparationVector(){
         return separationVector;
-    }
-
-    public ProceduralBody getBody() {
-        return body;
     }
 }
