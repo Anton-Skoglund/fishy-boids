@@ -110,7 +110,7 @@ public class Main extends Application {
 
                 double distance = new Vector(currentFish.getHead().getCenter(), neighborBoid.getHead().getCenter()).getLength();
 
-                if(currentFish.getHead().getVisionRadius() > distance){
+                if(currentFish.getHead().   getVisionRadius() > distance){
                     currentFish.getHead().addNeighborBoid(neighborBoid.getHead());
                     return;
                 }
