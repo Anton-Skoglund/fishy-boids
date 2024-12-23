@@ -23,7 +23,7 @@ public class Procedural extends Application  {
         root = new Pane();
 
         head = new Point(0,0);
-        body = new ProceduralBody(head);
+        body = new ProceduralBody(head, 25, i -> (1 - Math.sin(i / 20.0)) * 10 + 5);
 
 
         root.getChildren().addAll(body.getNodes());

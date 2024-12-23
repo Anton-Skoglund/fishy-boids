@@ -3,37 +3,43 @@ package org.example.fishyboids;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import org.example.fishyboids.Point;
-import org.example.fishyboids.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 public class ProceduralBody  {
     private Point head;
+    private int amount;
 
     private List<Circle> nodes;
     private List<Point> points;
     private List<Line> lines;
 
 
-    public ProceduralBody(Point head) {
+    //TODO
+    // - color function
+    // - Optional function input and have a standard
 
+    public ProceduralBody(Point head, int amount, Function<Double, Double> bodyShape) {
         this.head = head;
+        this.amount = amount;
 
         nodes = new ArrayList<>();
         lines = new ArrayList<>();
         points = new ArrayList<>();
 
-        int amount = 25;
 
+        initBody(amount, bodyShape);
+    }
+
+    private void initBody(int amount, Function<Double, Double> bodyShape) {
         for(int i = 0; i < amount; i++){
             Random random = new Random();
             int step = 255 / amount;
 
-
-            Circle newCircle = new Circle(50, 50, (1 - Math.sin(i / 20.0)) * 10 + 5, Color.rgb(0, 0 , (amount - i)*step));
+            Circle newCircle = new Circle(0, 0, bodyShape.apply((double) i), Color.rgb(0, 0 , (amount - i)*step));
 
             Line newLine = new Line(0, 0, 0, 0);
             Point newPoint = new Point(0,0);

@@ -53,7 +53,7 @@ public class Boid{
         cohesionVector = new Vector(2);
 
 
-        body = new ProceduralBody(getCenter());
+        body = new ProceduralBody(getCenter(), 25, i -> (1 - Math.sin(i / 20.0)) * 10 + 5);
 
         neighborsBoids = new HashSet<>();
 
