@@ -1,14 +1,6 @@
 package org.example.fishyboids;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import org.example.fishyboids.Point;
-import org.example.fishyboids.Vector;
-
 import java.util.*;
-
-import static javafx.scene.paint.Color.BLACK;
 
 public class Boid{
     private double x;
@@ -18,36 +10,33 @@ public class Boid{
     private double visionRadius;
 
     private Set<Boid> neighborsBoids;
+
     Vector cohesionVector;
     Vector alignmentVector;
     Vector separationVector;
+    double cohesionWeight = 0.00015;
+    double alignmentWeight = 0.05;
+    double separationWeight = 0.1;
+
 
     private Point centerPoint;
 
-    private Circle circle;
-    private double width;
-    private double height;
-
     private ProceduralBody body;
-
-    private Circle visionCircle;
-
 
 
 
     private Random random = new Random();
 
-    public Boid(double x, double y, double velocity, double visionRadius, double size, double width, double height){
+    public Boid(double x, double y, double velocity, double visionRadius){
         this.x = x;
         this.y = y;
         this.velocity = velocity;
         this.visionRadius = visionRadius;
-        this.width = width;
-        this.height = height;
 
         centerPoint = new Point(x,y);
 
-        directionVector = new Vector(new double[]{random.nextInt(-5,5), random.nextInt(-5, 5)});
+        directionVector = new Vector(new double[]{1,1});
+
         separationVector = new Vector(2);
         alignmentVector = new Vector(2);
         cohesionVector = new Vector(2);
@@ -56,22 +45,21 @@ public class Boid{
         body = new ProceduralBody(getCenter(), 25, i -> (1 - Math.sin(i / 20.0)) * 10 + 5);
 
         neighborsBoids = new HashSet<>();
+    }
 
-        circle = new Circle(x, y, size, Color.RED);
+    public Boid(double x, double y, double velocity, double visionRadius, double cohesionWeight, double alignmentWeight, double separationWeight){
+        this(x, y, velocity, visionRadius);
 
-        visionCircle = new Circle(visionRadius);
-        visionCircle.setFill(null);
-        visionCircle.setStroke(BLACK);
-
+        this.cohesionWeight = cohesionWeight;
+        this.alignmentWeight = alignmentWeight;
+        this.separationWeight = separationWeight;
     }
 
     public void updatePosition() {
         steerLogic();
 
         moveBoidsFromAngle();
-        screenWrapping();
 
-        updateCirclePosition();
         body.move();
     }
 
@@ -80,14 +68,6 @@ public class Boid{
         alignmentVector = alignmentVector();
         separationVector = separationVector();
 
-        double cohesionWeight = 0.00015;
-        double alignmentWeight = 0.05;
-        double separationWeight = 0.1;
-
-
-        // angle += random.nextDouble(-0.011, 0.011);
-        Vector randomVector = new Vector(new double[]{directionVector.get(0) * random.nextDouble(-0.011, 0.011), directionVector.get(1) * random.nextDouble(-0.011, 0.011)});
-        //directionVector = directionVector.add(randomVector);
 
         directionVector = directionVector.add(separationVector.scale(separationWeight).get());
         directionVector = directionVector.add(alignmentVector.scale(alignmentWeight).get());
@@ -128,10 +108,6 @@ public class Boid{
             // Reverse the vector direction to "push away"
             separationVector.scale(-1);
         }
-
-        // Debugging output
-        System.out.println("Length difference: " + (oldLength - separationVector.getLength()));
-
         return separationVector;
     }
 
@@ -159,34 +135,15 @@ public class Boid{
         return cohesionVector;
     }
 
+
     private void moveBoidsFromAngle() {
         x  += velocity * directionVector.get(0);
         y += velocity * directionVector.get(1);
     }
 
-    private void updateCirclePosition() {
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-
-        visionCircle.setCenterX(x);
-        visionCircle.setCenterY(y);
-    }
-
-    private void screenWrapping() {
-        if(x > width){
-            x = 0;
-        }
-        if(y > height){
-            y = 0;
-        }
-
-        if(x < 0){
-            x = width;
-        }
-
-        if(y < 0){
-            y = height;
-        }
+    public void moveBoid(double x, double y){
+        this.x = x;
+        this.y = y;
     }
 
 
@@ -210,16 +167,6 @@ public class Boid{
     }
 
 
-    public List<Line> getNeighborsLines(){
-        List<Line> lines = new ArrayList<>();
-
-        neighborsBoids.forEach(neighbor ->{
-            lines.add(new Line(this.x, this.y, neighbor.getCenter().x, neighbor.getCenter().y));
-        });
-
-        return lines;
-    }
-
     public Vector getDirectionVector(){
         return directionVector;
     }
@@ -234,14 +181,6 @@ public class Boid{
 
     public Vector getSeparationVector(){
         return separationVector;
-    }
-
-    public Circle getCircle() {
-        return circle;
-    }
-
-    public Circle getVisionCircle() {
-        return visionCircle;
     }
 
     public ProceduralBody getBody() {

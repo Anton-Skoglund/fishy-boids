@@ -20,7 +20,6 @@ public class Main extends Application {
     private final int HEIGHT = 1080;
 
 
-
     private List<Boid> boids;
 
     private Random random = new Random();
@@ -32,7 +31,7 @@ public class Main extends Application {
         boids = new ArrayList<>();
 
         for(int i = 0; i < 50; i++){
-            boids.add(new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50, 10, WIDTH, HEIGHT));
+            boids.add(new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50));
         }
 
 
@@ -61,17 +60,12 @@ public class Main extends Application {
         root.getChildren().clear();
 
         for (Boid currentBoid : boids) {
-            // root.getChildren().add(currentBoid.getCircle());
-            // root.getChildren().add(currentBoid.getVisionCircle());
-
-            Vector directionVector = currentBoid.getDirectionVector();
-            // root.getChildren().add(new Line(currentBoid.getCenter().x, currentBoid.getCenter().y, currentBoid.getCenter().x + directionVector.get(0) * 100, currentBoid.getCenter().y + directionVector.get(1) * 100));
-
             root.getChildren().addAll(currentBoid.getBody().getNodes());
 
+            currentBoid.updatePosition();
+            screenWrapping(currentBoid);
 
 
-            currentBoid.updatePosition(); // Move each boid
             boids.forEach(neighborBoid -> {
                 if (currentBoid == neighborBoid) {
                     return; // can't use continues
@@ -86,13 +80,35 @@ public class Main extends Application {
 
                 currentBoid.removeNeighborBoid(neighborBoid);
             });
-
-
-            // currentBoid.getNeighborsLines().forEach(line -> root.getChildren().add(line));
         }
 
 
     }
+
+    private void screenWrapping(Boid boid) {
+        double x = boid.getCenter().x;
+        double y = boid.getCenter().y;
+
+
+        if(x > WIDTH){
+            x = 0;
+        }
+        if(y > HEIGHT){
+            y = 0;
+        }
+
+        if(x < 0){
+            x = WIDTH;
+        }
+
+        if(y < 0){
+            y = HEIGHT;
+        }
+
+        boid.moveBoid(x,y);
+    }
+
+
 
     public static void main(String[] args) {
         launch(args);

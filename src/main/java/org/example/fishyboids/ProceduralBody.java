@@ -54,7 +54,6 @@ public class ProceduralBody  {
         nodes.getFirst().setCenterY(head.y - nodes.getFirst().getRadius() / 2);
 
 
-
         for(int i = nodes.toArray().length - 1; i > 0; i--){
             Point p1 = new Point(nodes.get(i-1).getCenterX(), nodes.get(i-1).getCenterY());
             Point p2 = new Point(nodes.get(i).getCenterX(), nodes.get(i).getCenterY());
