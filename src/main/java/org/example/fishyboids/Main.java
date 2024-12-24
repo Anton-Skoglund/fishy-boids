@@ -34,7 +34,7 @@ public class Main extends Application {
         fishes = new ArrayList<>();
 
         for(int i = 0; i < 50; i++){
-            Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50);
+            DebugBoid head = new DebugBoid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50);
 
             int amount = 25;
             double scale = 10;
@@ -62,7 +62,7 @@ public class Main extends Application {
 
             //ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            ProceduralBody body = new ProceduralBody(head.getCenter(), 1, aDouble -> 10.0, integer -> Color.WHITE);
+            DebugBody body = new DebugBody(head);
 
             fishes.add(new Fish(head, body));
         }

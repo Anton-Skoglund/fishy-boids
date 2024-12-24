@@ -6,10 +6,10 @@ public class Boid{
     private double x;
     private double y;
     private double velocity;
-    private Vector directionVector;
+    Vector directionVector;
     private double visionRadius;
 
-    private Set<Boid> neighborsBoids;
+    Set<Boid> neighborsBoids;
 
     Vector cohesionVector;
     Vector alignmentVector;

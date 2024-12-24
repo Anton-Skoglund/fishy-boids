@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class ProceduralBody implements Body<Circle> {
+public class ProceduralBody implements Body {
     private Point head;
     private int amount;
     private Function<Double, Double> bodyShape;
@@ -31,14 +31,14 @@ public class ProceduralBody implements Body<Circle> {
         points = new ArrayList<>();
 
 
-        initBody(amount, bodyShape);
+        initBody();
     }
 
     public ProceduralBody(Point head, int amount) {
         this(head, amount, k -> Math.abs(Math.cos((k / (25 + 10.0)) * Math.PI)) * 10 + 5, i -> Color.rgb(0, 0 ,  Math.max(i * (255 / amount), (amount - i) * (255 / amount))));
     }
 
-    private void initBody(int amount, Function<Double, Double> bodyShape) {
+    private void initBody() {
         for(int i = 0; i < amount; i++){
 
             Circle newCircle = new Circle(0, 0, bodyShape.apply((double) i), colorFunction.apply(i));
@@ -78,7 +78,7 @@ public class ProceduralBody implements Body<Circle> {
     }
 
     @Override
-    public List<Circle> getNodes() {
+    public List<? extends Node> getNodes() {
         return nodes;
     }
 

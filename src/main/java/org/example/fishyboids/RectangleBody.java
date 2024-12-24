@@ -1,5 +1,6 @@
 package org.example.fishyboids;
 
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class RectangleBody implements Body<Rectangle> {
+public class RectangleBody implements Body {
     private Point head;
     private int amount;
     private Function<Double, Double> bodyShape;
@@ -32,14 +33,14 @@ public class RectangleBody implements Body<Rectangle> {
         points = new ArrayList<>();
 
 
-        initBody(amount, bodyShape);
+        initBody();
     }
 
     public RectangleBody(Point head, int amount) {
         this(head, amount, k -> Math.abs(Math.cos((k / (25 + 10.0)) * Math.PI)) * 10 + 5, i -> Color.rgb(0, 0 ,  Math.max(i * (255 / amount), (amount - i) * (255 / amount))));
     }
 
-    private void initBody(int amount, Function<Double, Double> bodyShape) {
+    private void initBody() {
         for(int i = 0; i < amount; i++){
 
             Rectangle neeRectangle = new Rectangle(bodyShape.apply((double) i), bodyShape.apply((double) i), colorFunction.apply(i));
@@ -82,7 +83,7 @@ public class RectangleBody implements Body<Rectangle> {
     }
 
     @Override
-    public List<Rectangle> getNodes() {
+    public List<? extends Node> getNodes() {
         return nodes;
     }
 

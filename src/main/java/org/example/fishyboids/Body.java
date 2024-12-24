@@ -6,8 +6,7 @@ import java.util.List;
 
 //TODO
 // - forced the update function, but think it is best
-public interface Body<T extends Node> {
-    List<T> getNodes();
+public interface Body {
+    List<? extends Node> getNodes();
     void update();
-
 }
