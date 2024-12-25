@@ -16,7 +16,7 @@ public class Boid{
     Vector separationVector;
     double cohesionWeight = 0.00015;
     double alignmentWeight = 0.05;
-    double separationWeight = 0.1;
+    double separationWeight = 0.0002;
 
 
     private Point centerPoint;
@@ -30,7 +30,7 @@ public class Boid{
 
         centerPoint = new Point(x,y);
 
-        directionVector = new Vector(new double[]{1,1});
+        directionVector = randomUnitVector();
 
         separationVector = new Vector(2);
         alignmentVector = new Vector(2);
@@ -69,40 +69,35 @@ public class Boid{
         double normalizedVector = velocity / directionVector.getLength();
         directionVector.scale(normalizedVector);
     }
-
     private Vector separationVector() {
-        // Initialize separationVector with 2 dimensions
         Vector separationVector = new Vector(2);
 
-        // If there are no neighbors, return the zero vector
         if (neighborsBoids.isEmpty()) {
-            return separationVector;
+            return separationVector; // Return zero vector if no neighbors
         }
 
-        // Compute the separation vector by summing direction vectors from neighbors
         for (Boid boid : neighborsBoids) {
-            Vector hold = new Vector(getCenter(), boid.getCenter());
-            separationVector = separationVector.add(hold);
+            Vector direction = new Vector(getCenter(), boid.getCenter());
+            double distance = direction.getLength();
+
+            // Avoid division by zero and skip very far boids
+            if (distance > 0 && distance < visionRadius) {
+                direction.scale(1 / (distance * distance)); // Weight inversely by squared distance
+                separationVector = separationVector.add(direction);
+            }
         }
 
-        // Store the old length of the separation vector
         double oldLength = separationVector.getLength();
 
-        // Avoid division by zero
         if (oldLength > 0) {
-            // Normalize the vector
-            separationVector.scale( 1/ (oldLength));
-
-            // Scale it inversely proportional to the distance
+            separationVector.scale(1 / oldLength); // Normalize
             double scaleFactor = visionRadius - oldLength;
             separationVector.scale(scaleFactor);
-
-            // Reverse the vector direction to "push away"
-            separationVector.scale(-1);
+            separationVector.scale(-1); // Reverse direction to repel
         }
+
         return separationVector;
     }
-
 
     private Vector alignmentVector() {
         Vector aligmentVector = new Vector(2);
@@ -138,6 +133,13 @@ public class Boid{
         this.y = y;
     }
 
+    private Vector randomUnitVector() {
+        Random random = new Random();
+        double angle = random.nextDouble() * 2 * Math.PI; // Random angle in radians
+        double x = Math.cos(angle); // X component
+        double y = Math.sin(angle); // Y component
+        return new Vector(new double[]{x, y}); // Return unit vector
+    }
 
     public void addNeighborBoid(Boid boid){
         neighborsBoids.add(boid);
@@ -161,4 +163,5 @@ public class Boid{
     private Vector getDirectionVector(){
         return directionVector;
     }
+
 }
