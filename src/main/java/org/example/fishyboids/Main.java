@@ -34,7 +34,7 @@ public class Main extends Application {
         fishes = new ArrayList<>();
 
         for(int i = 0; i < 50; i++){
-            DebugBoid head = new DebugBoid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.40, 50);
+            DebugBoid head = new DebugBoid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50);
 
             int amount = 25;
             double scale = 10;
@@ -60,7 +60,7 @@ public class Main extends Application {
 
             // RectangleBody body = new RectangleBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            // ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+            //ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
             DebugBody body = new DebugBody(head);
 

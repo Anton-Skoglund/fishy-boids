@@ -14,9 +14,9 @@ public class Boid{
     Vector cohesionVector;
     Vector alignmentVector;
     Vector separationVector;
-    double cohesionWeight = 0.00015;
-    double alignmentWeight = 0.05;
-    double separationWeight = 0.0002;
+    double cohesionWeight = 0.0002;
+    double alignmentWeight = 0.055;
+    double separationWeight = 0.00035;
 
 
     private Point centerPoint;
