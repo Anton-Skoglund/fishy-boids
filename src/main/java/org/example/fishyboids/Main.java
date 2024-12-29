@@ -25,14 +25,35 @@ public class Main extends Application {
 
     private List<Fish> fishes;
 
+
+
     private final Random random = new Random();
 
     @Override
     public void start(Stage primaryStage) {
         root = new Pane();
-
         fishes = new ArrayList<>();
 
+        setupBackground();
+        createFishes();
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                updateFishes();
+                drawFishes();
+            }
+        };
+        timer.start();
+
+
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        primaryStage.setTitle("Boids Simulation with Animation");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void createFishes() {
         for(int i = 0; i < 50; i++){
             DebugBoid head = new DebugBoid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50);
 
@@ -60,23 +81,47 @@ public class Main extends Application {
 
             // RectangleBody body = new RectangleBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            //ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+            // ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
             DebugBody body = new DebugBody(head);
 
             fishes.add(new Fish(head, body));
         }
+    }
 
+    private void updateFishes() {
+        for (Fish currentFish : fishes) {
+            currentFish.update();
+            screenWrapping(currentFish.getHead());
 
-        // Animation timer for updating boids
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                updateBoids();
-            }
-        };
-        timer.start();
+            fishes.forEach(neighborBoid -> {
+                if (currentFish == neighborBoid) {
+                    return; // can't use continues
+                }
 
+                double distance = new Vector(currentFish.getHead().getCenter(), neighborBoid.getHead().getCenter()).getLength();
+
+                if (currentFish.getHead().getVisionRadius() > distance) {
+                    currentFish.getHead().addNeighborBoid(neighborBoid.getHead());
+                    return;
+                }
+
+                currentFish.getHead().removeNeighborBoid(neighborBoid.getHead());
+            });
+        }
+    }
+
+    private void drawFishes() {
+        //TODO
+        // - canvas is better
+        root.getChildren().clear();
+
+        for (Fish currentFish : fishes) {
+            root.getChildren().addAll(currentFish.getBody().getNodes());
+        }
+    }
+
+    private void setupBackground() {
         LinearGradient gradient = new LinearGradient(
                 0, 0, 1, 1, // startX, startY, endX, endY
                 true, // proportional (true means relative to the container size)
@@ -86,43 +131,6 @@ public class Main extends Application {
         );
 
         root.setBackground(new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, null)));
-
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
-
-        primaryStage.setTitle("Boids Simulation with Animation");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    // Method to update the boids' positions
-    private void updateBoids() {
-        // canvas is better
-        root.getChildren().clear();
-
-        for (Fish currentFish : fishes) {
-            root.getChildren().addAll(currentFish.getBody().getNodes());
-
-            currentFish.update();
-            screenWrapping(currentFish.getHead());
-
-
-            fishes.forEach(neighborBoid -> {
-                if (currentFish == neighborBoid) {
-                    return; // can't use continues
-                }
-
-                double distance = new Vector(currentFish.getHead().getCenter(), neighborBoid.getHead().getCenter()).getLength();
-
-                if(currentFish.getHead().   getVisionRadius() > distance){
-                    currentFish.getHead().addNeighborBoid(neighborBoid.getHead());
-                    return;
-                }
-
-                currentFish.getHead().removeNeighborBoid(neighborBoid.getHead());
-            });
-        }
-
-
     }
 
     private void screenWrapping(Boid boid) {
@@ -147,8 +155,6 @@ public class Main extends Application {
 
         boid.moveBoid(x,y);
     }
-
-
 
     public static void main(String[] args) {
         launch(args);
