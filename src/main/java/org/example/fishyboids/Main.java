@@ -12,6 +12,10 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
+import org.example.fishyboids.Body.DebugBody;
+import org.example.fishyboids.Boid.Boid;
+import org.example.fishyboids.Boid.DebugBoid;
+import org.example.fishyboids.Util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;

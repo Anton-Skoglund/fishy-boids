@@ -1,5 +1,8 @@
 package org.example.fishyboids;
 
+import org.example.fishyboids.Body.Body;
+import org.example.fishyboids.Boid.Boid;
+
 public class Fish {
     private Boid head;
     private Body body;
@@ -23,8 +26,5 @@ public class Fish {
     public Body getBody() {
         return body;
     }
-
-
-
 }
 

@@ -1,6 +1,4 @@
-package org.example.fishyboids;
-
-import org.example.fishyboids.Point;
+package org.example.fishyboids.Util;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package org.example.fishyboids;
+package org.example.fishyboids.Util;
 
 public class Point {
     public double x;

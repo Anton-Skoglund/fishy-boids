@@ -1,9 +1,11 @@
-package org.example.fishyboids;
+package org.example.fishyboids.Body;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import org.example.fishyboids.Util.Point;
+import org.example.fishyboids.Util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;

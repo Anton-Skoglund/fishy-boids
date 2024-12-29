@@ -1,4 +1,4 @@
-package org.example.fishyboids;
+package org.example.fishyboids.Body;
 
 import javafx.scene.Node;
 

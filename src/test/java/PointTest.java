@@ -1,4 +1,4 @@
-import org.example.fishyboids.Point;
+import org.example.fishyboids.Util.Point;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

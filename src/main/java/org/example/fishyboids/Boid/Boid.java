@@ -1,4 +1,7 @@
-package org.example.fishyboids;
+package org.example.fishyboids.Boid;
+
+import org.example.fishyboids.Util.Point;
+import org.example.fishyboids.Util.Vector;
 
 import java.util.*;
 
@@ -14,9 +17,9 @@ public class Boid{
     Vector cohesionVector;
     Vector alignmentVector;
     Vector separationVector;
-    double cohesionWeight = 0.0002;
-    double alignmentWeight = 0.055;
-    double separationWeight = 0.00035;
+    protected double cohesionWeight = 0.000_2;
+    protected double alignmentWeight = 0.055;
+    protected double separationWeight = 0.000_35;
 
 
     private Point centerPoint;

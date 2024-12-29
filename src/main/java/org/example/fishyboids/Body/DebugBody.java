@@ -1,9 +1,12 @@
-package org.example.fishyboids;
+package org.example.fishyboids.Body;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import org.example.fishyboids.Boid.Boid;
+import org.example.fishyboids.Boid.DebugBoid;
+import org.example.fishyboids.Util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +66,9 @@ public class DebugBody implements Body{
 
         List<Triple<Double, Vector, Color>> vectorsToLines = new ArrayList<>() {{
             add(new Triple<>(100.0, head.getDirectionVector(), Color.RED));
-            add(new Triple<>(1 / head.alignmentWeight, head.getAligmentVector(), Color.BLUE));
-            add(new Triple<>(1 / head.cohesionWeight, head.getCohesionVector(), Color.GREEN));
-            add(new Triple<>(1 / head.separationWeight, head.getSeparationVector(), Color.PINK));
+            add(new Triple<>(1 / head.getAlignmentWeight(), head.getAligmentVector(), Color.BLUE));
+            add(new Triple<>(1 / head.getCohesionWeight(), head.getCohesionVector(), Color.GREEN));
+            add(new Triple<>(1 / head.getSeparationWeight(), head.getSeparationVector(), Color.PINK));
         }};
 
         for(Triple<Double, Vector, Color> triple : vectorsToLines){
