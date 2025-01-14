@@ -1,9 +1,12 @@
 package org.example.fishyboids;
 
+import javafx.scene.Node;
 import org.example.fishyboids.Body.Body;
 import org.example.fishyboids.Boid.Boid;
 
-public class Fish {
+import java.util.List;
+
+public class Fish implements Drawable{
     private Boid head;
     private Body body;
 
@@ -23,8 +26,10 @@ public class Fish {
     }
 
 
-    public Body getBody() {
-        return body;
+
+    @Override
+    public List<? extends Node> getNodes() {
+        return body.getNodes();
     }
 }
 

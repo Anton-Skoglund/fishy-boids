@@ -13,11 +13,14 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import org.example.fishyboids.Body.DebugBody;
+import org.example.fishyboids.Body.ProceduralBody;
 import org.example.fishyboids.Boid.Boid;
 import org.example.fishyboids.Boid.DebugBoid;
+import org.example.fishyboids.Util.Point;
 import org.example.fishyboids.Util.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
@@ -28,6 +31,8 @@ public class Main extends Application {
     private final int HEIGHT = 1080;
 
     private List<Fish> fishes;
+    private List<Drawable> drawables;
+    private List<Barrier> barriers;
 
 
 
@@ -37,9 +42,20 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         root = new Pane();
         fishes = new ArrayList<>();
+        drawables = new ArrayList<>();
+        barriers = new ArrayList<>();
+
 
         setupBackground();
         createFishes();
+
+        for(int i = 0; i < 10; i++){
+            Barrier barrier = new Barrier(random.nextDouble() * WIDTH, random.nextDouble() * HEIGHT, 100, 100);
+            drawables.add(barrier);
+            barriers.add(barrier);
+        }
+
+
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -59,7 +75,7 @@ public class Main extends Application {
 
     private void createFishes() {
         for(int i = 0; i < 50; i++){
-            DebugBoid head = new DebugBoid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50);
+            Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50);
 
             int amount = 25;
             double scale = 10;
@@ -85,33 +101,63 @@ public class Main extends Application {
 
             // RectangleBody body = new RectangleBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            // ProceduralBody body = new ProceduralBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+            ProceduralBody body = new ProceduralBody(head, amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            DebugBody body = new DebugBody(head);
+            // DebugBody body = new DebugBody(head);
 
-            fishes.add(new Fish(head, body));
+            Fish fish = new Fish(head, body);
+
+            fishes.add(fish);
+            drawables.add(fish);
         }
     }
 
     private void updateFishes() {
         for (Fish currentFish : fishes) {
+            Boid currentHead = currentFish.getHead();
+
+            /*
+            for(Barrier barrier : barriers){
+                ArrayList<Boolean> result = new ArrayList<>();
+                int i = 0;
+                for(Line line : currentFish.getVissionLines()){
+                    result[i] = Detection.lineIntersection(line, barrier);
+                    i++;
+                }
+
+                currentFish.setObsticalsInView(result);
+            }
+            */
+
             currentFish.update();
             screenWrapping(currentFish.getHead());
 
-            fishes.forEach(neighborBoid -> {
-                if (currentFish == neighborBoid) {
-                    return; // can't use continues
+            for(Point point : currentHead.getRay().getRayPoints()){
+                for(Barrier barrier : barriers){
+                    if(barrier.inside(point)){
+                        currentHead.collision();
+
+                    }
+
+                }
+            }
+
+            for(Fish neighborFish : fishes){
+                Boid neighborHead = neighborFish.getHead();
+
+                if (currentFish == neighborFish) {
+                    continue;
                 }
 
-                double distance = new Vector(currentFish.getHead().getCenter(), neighborBoid.getHead().getCenter()).getLength();
+                Vector distanceVector = new Vector(currentHead.getCenter(), neighborHead.getCenter());
+                double distance = distanceVector.getLength();
 
-                if (currentFish.getHead().getVisionRadius() > distance) {
-                    currentFish.getHead().addNeighborBoid(neighborBoid.getHead());
-                    return;
+                if (currentHead.getVisionRadius() > distance) {
+                    currentHead.addNeighborBoid(neighborFish.getHead());
+                }else{
+                    currentHead.removeNeighborBoid(neighborFish.getHead());
                 }
-
-                currentFish.getHead().removeNeighborBoid(neighborBoid.getHead());
-            });
+            }
         }
     }
 
@@ -120,8 +166,8 @@ public class Main extends Application {
         // - canvas is better
         root.getChildren().clear();
 
-        for (Fish currentFish : fishes) {
-            root.getChildren().addAll(currentFish.getBody().getNodes());
+        for (Drawable currentFish : drawables) {
+            root.getChildren().addAll(currentFish.getNodes());
         }
     }
 

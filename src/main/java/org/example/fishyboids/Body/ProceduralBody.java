@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import org.example.fishyboids.Boid.Boid;
 import org.example.fishyboids.Util.Point;
 import org.example.fishyboids.Util.Vector;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ProceduralBody implements Body {
-    private Point head;
+    private Boid head;
     private int amount;
     private Function<Double, Double> bodyShape;
     private Function<Integer, Color> colorFunction;
@@ -22,7 +23,7 @@ public class ProceduralBody implements Body {
     private List<Line> lines;
 
 
-    public ProceduralBody(Point head, int amount, Function<Double, Double> bodyShape, Function<Integer, Color> colorFunction) {
+    public ProceduralBody(Boid head, int amount, Function<Double, Double> bodyShape, Function<Integer, Color> colorFunction) {
         this.head = head;
         this.amount = amount;
         this.bodyShape = bodyShape;
@@ -36,7 +37,7 @@ public class ProceduralBody implements Body {
         initBody();
     }
 
-    public ProceduralBody(Point head, int amount) {
+    public ProceduralBody(Boid head, int amount) {
         this(head, amount, k -> Math.abs(Math.cos((k / (25 + 10.0)) * Math.PI)) * 10 + 5, i -> Color.rgb(0, 0 ,  Math.max(i * (255 / amount), (amount - i) * (255 / amount))));
     }
 
@@ -54,9 +55,10 @@ public class ProceduralBody implements Body {
     }
 
     public void update() {
-        nodes.getFirst().setCenterX(head.x - nodes.getFirst().getRadius() / 2);
-        nodes.getFirst().setCenterY(head.y - nodes.getFirst().getRadius() / 2);
+        nodes.getFirst().setCenterX(head.getCenter().x - nodes.getFirst().getRadius() / 2);
+        nodes.getFirst().setCenterY(head.getCenter().y - nodes.getFirst().getRadius() / 2);
 
+        System.out.println(head);
 
         for(int i = nodes.toArray().length - 1; i > 0; i--){
             Point p1 = new Point(nodes.get(i-1).getCenterX(), nodes.get(i-1).getCenterY());

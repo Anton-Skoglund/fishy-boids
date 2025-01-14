@@ -1,5 +1,6 @@
 package org.example.fishyboids.Boid;
 
+import org.example.fishyboids.Util.Ray;
 import org.example.fishyboids.Util.Vector;
 
 import java.util.Set;

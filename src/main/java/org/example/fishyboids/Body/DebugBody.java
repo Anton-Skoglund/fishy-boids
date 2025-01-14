@@ -6,6 +6,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import org.example.fishyboids.Boid.Boid;
 import org.example.fishyboids.Boid.DebugBoid;
+import org.example.fishyboids.Util.Point;
 import org.example.fishyboids.Util.Vector;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class DebugBody implements Body{
 
     private List<Circle> bodies;
     private List<Line> lines;
+    private List<Circle> raysDots;
+
 
 
     private Circle vissionCircle;
@@ -25,6 +28,9 @@ public class DebugBody implements Body{
 
         bodies = new ArrayList<>();
         lines = new ArrayList<>();
+        raysDots = new ArrayList<>();
+
+
 
         initBody();
     }
@@ -50,6 +56,7 @@ public class DebugBody implements Body{
 
 
         lines.clear();
+        raysDots.clear();
 
 
         for(Boid otherBoid : head.getNeighbors()){
@@ -58,17 +65,25 @@ public class DebugBody implements Body{
                 // Ugly
                 Line newLine = new Line(head.getCenter().x - bodies.getFirst().getRadius() / 2, head.getCenter().y- bodies.getFirst().getRadius() / 2, otherBoid.getCenter().x - bodies.getFirst().getRadius() / 2, otherBoid.getCenter().y- bodies.getFirst().getRadius() / 2);
                 newLine.setStroke(Color.WHITE);
-                lines.add(newLine);
+
+                // lines.add(newLine);
             }
         }
 
         record Triple<A, B, C>(A first, B second, C third) {}
+
+        Vector rayVector = new Vector(head.getRay().getStartPoint(), head.getRay().getEndPoint());
+
+        for(Point point : head.getRay().getRayPoints()){
+            raysDots.add(new Circle(point.x, point.y, 1, Color.WHITE));
+        }
 
         List<Triple<Double, Vector, Color>> vectorsToLines = new ArrayList<>() {{
             add(new Triple<>(100.0, head.getDirectionVector(), Color.RED));
             add(new Triple<>(1 / head.getAlignmentWeight(), head.getAligmentVector(), Color.BLUE));
             add(new Triple<>(1 / head.getCohesionWeight(), head.getCohesionVector(), Color.GREEN));
             add(new Triple<>(1 / head.getSeparationWeight(), head.getSeparationVector(), Color.PINK));
+            add(new Triple<>(1.0, rayVector, Color.WHITE));
         }};
 
         for(Triple<Double, Vector, Color> triple : vectorsToLines){
@@ -78,10 +93,11 @@ public class DebugBody implements Body{
 
             Line directionLine = new Line(bodies.getFirst().getCenterX(), bodies.getFirst().getCenterY(), bodies.getFirst().getCenterX() + vector.get(0) * scalar, bodies.getFirst().getCenterY() + vector.get(1) * scalar);
             directionLine.setStroke(color);
+
             lines.add(directionLine);
         }
-
     }
+
 
     // BAD, but for testing
     @Override
@@ -89,6 +105,7 @@ public class DebugBody implements Body{
         List<Node> combined = new ArrayList<>();
         combined.addAll(lines);  // Add all line nodes
         combined.addAll(bodies);  // Add all circle nodes
+        combined.addAll(raysDots);
 
         combined.add(vissionCircle);
         return combined;

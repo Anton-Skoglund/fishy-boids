@@ -1,5 +1,6 @@
 package org.example.fishyboids.Util;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Vector {
@@ -184,5 +185,10 @@ public class Vector {
 
 
         return returnVector;
+    }
+
+    @Override
+    public String toString(){
+        return Arrays.toString(array);
     }
 }

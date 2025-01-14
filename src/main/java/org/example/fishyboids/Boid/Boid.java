@@ -1,6 +1,7 @@
 package org.example.fishyboids.Boid;
 
 import org.example.fishyboids.Util.Point;
+import org.example.fishyboids.Util.Ray;
 import org.example.fishyboids.Util.Vector;
 
 import java.util.*;
@@ -21,8 +22,7 @@ public class Boid{
     protected double alignmentWeight = 0.055;
     protected double separationWeight = 0.000_35;
 
-
-    private Point centerPoint;
+    protected Ray detectionRay;
 
 
     public Boid(double x, double y, double velocity, double visionRadius){
@@ -31,14 +31,11 @@ public class Boid{
         this.velocity = velocity;
         this.visionRadius = visionRadius;
 
-        centerPoint = new Point(x,y);
-
         directionVector = randomUnitVector();
 
         separationVector = new Vector(2);
         alignmentVector = new Vector(2);
         cohesionVector = new Vector(2);
-
 
 
         neighborsBoids = new HashSet<>();
@@ -68,6 +65,7 @@ public class Boid{
         directionVector = directionVector.add(alignmentVector.scale(alignmentWeight).get());
         directionVector = directionVector.add(cohesionVector.scale(cohesionWeight).get());
 
+        detectionRay = new Ray(new Point(x, y), new Point(x + directionVector.get(0) * 100,  y + directionVector.get(1) * 100), 10);
 
         double normalizedVector = velocity / directionVector.getLength();
         directionVector.scale(normalizedVector);
@@ -153,10 +151,7 @@ public class Boid{
     }
 
     public Point getCenter() {
-        centerPoint.x = x;
-        centerPoint.y = y;
-
-        return centerPoint;
+        return new Point(x, y);
     }
 
     public double getVisionRadius() {
@@ -165,6 +160,17 @@ public class Boid{
 
     private Vector getDirectionVector(){
         return directionVector;
+    }
+
+    public void collision(){
+        directionVector = directionVector.add(randomUnitVector().scale(0.1).get());
+
+
+    }
+
+    public Ray getRay(){
+
+        return detectionRay;
     }
 
 }
