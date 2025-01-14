@@ -7,8 +7,8 @@ import java.util.Set;
 
 public class DebugBoid extends Boid{
 
-    public DebugBoid(double x, double y, double velocity, double visionRadius) {
-        super(x, y, velocity, visionRadius);
+    public DebugBoid(double x, double y, double velocity, double visionRadius, Family family) {
+        super(x, y, velocity, visionRadius, family);
     }
 
     public Set<Boid> getNeighbors(){

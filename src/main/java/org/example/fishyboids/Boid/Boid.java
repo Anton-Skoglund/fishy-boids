@@ -15,6 +15,8 @@ public class Boid{
 
     Set<Boid> neighborsBoids;
 
+    Family family;
+
     Vector cohesionVector;
     Vector alignmentVector;
     Vector separationVector;
@@ -25,11 +27,13 @@ public class Boid{
     protected Ray detectionRay;
 
 
-    public Boid(double x, double y, double velocity, double visionRadius){
+    public Boid(double x, double y, double velocity, double visionRadius, Family family){
         this.x = x;
         this.y = y;
         this.velocity = velocity;
         this.visionRadius = visionRadius;
+
+        this.family = family;
 
         directionVector = randomUnitVector();
 
@@ -41,8 +45,8 @@ public class Boid{
         neighborsBoids = new HashSet<>();
     }
 
-    public Boid(double x, double y, double velocity, double visionRadius, double cohesionWeight, double alignmentWeight, double separationWeight){
-        this(x, y, velocity, visionRadius);
+    public Boid(double x, double y, double velocity, double visionRadius, Family family, double cohesionWeight, double alignmentWeight, double separationWeight){
+        this(x, y, velocity, visionRadius, family);
 
         this.cohesionWeight = cohesionWeight;
         this.alignmentWeight = alignmentWeight;
@@ -103,7 +107,9 @@ public class Boid{
     private Vector alignmentVector() {
         Vector aligmentVector = new Vector(2);
         for(Boid boid : neighborsBoids){
-            aligmentVector = aligmentVector.add(boid.getDirectionVector());
+            if(boid.family == this.family){
+                aligmentVector = aligmentVector.add(boid.getDirectionVector());
+            }
         }
         return aligmentVector;
     }
@@ -117,7 +123,9 @@ public class Boid{
 
 
         for(Boid boid : neighborsBoids){
-            cohesionVector = cohesionVector.add(new Vector(getCenter(), new Point(boid.getCenter().x, boid.getCenter().y)));
+            if(boid.family == this.family){
+                cohesionVector = cohesionVector.add(new Vector(getCenter(), new Point(boid.getCenter().x, boid.getCenter().y)));
+            }
         }
 
         return cohesionVector;
@@ -171,6 +179,11 @@ public class Boid{
     public Ray getRay(){
 
         return detectionRay;
+    }
+
+    public Family getFamily(){
+
+        return family;
     }
 
 }

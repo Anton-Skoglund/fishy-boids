@@ -16,6 +16,7 @@ import org.example.fishyboids.Body.DebugBody;
 import org.example.fishyboids.Body.ProceduralBody;
 import org.example.fishyboids.Boid.Boid;
 import org.example.fishyboids.Boid.DebugBoid;
+import org.example.fishyboids.Boid.Family;
 import org.example.fishyboids.Util.Point;
 import org.example.fishyboids.Util.Vector;
 
@@ -74,8 +75,15 @@ public class Main extends Application {
     }
 
     private void createFishes() {
+        Family red = new Family("red");
+        Family blue = new Family("blue");
+        Family green = new Family("greessn");
+
+        Family[] families = {blue, red, green};
+
         for(int i = 0; i < 50; i++){
-            Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50);
+
+            Boid head = new Boid(i * 10 + random.nextDouble() * WIDTH, i * 10 + random.nextDouble() * HEIGHT, 0.4, 50, families[random.nextInt(families.length)]);
 
             int amount = 25;
             double scale = 10;
@@ -101,7 +109,7 @@ public class Main extends Application {
 
             // RectangleBody body = new RectangleBody(head.getCenter(), amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
 
-            ProceduralBody body = new ProceduralBody(head, amount, bodyFunctions.get(randomIndex), colorFunctions.get(randomIndex % 3));
+            ProceduralBody body = new ProceduralBody(head, amount, bodyFunctions.get(randomIndex), colorFunctions.get(head.getFamily().hashCode() % 3));
 
             // DebugBody body = new DebugBody(head);
 

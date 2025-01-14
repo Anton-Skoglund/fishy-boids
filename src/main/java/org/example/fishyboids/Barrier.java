@@ -27,7 +27,7 @@ public class Barrier implements Drawable {
         this.height = height;
 
         shape = new Rectangle(x, y, width, height);
-        shape.setFill(Color.RED);
+        shape.setFill(Color.rgb(255, 255, 255));
     }
 
     public Node getShape(){
