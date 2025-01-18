@@ -82,13 +82,15 @@ public class Boid{
         }
 
         for (Boid boid : neighborsBoids) {
-            Vector direction = new Vector(getCenter(), boid.getCenter());
-            double distance = direction.getLength();
+            if(boid.family == this.family) {
+                Vector direction = new Vector(getCenter(), boid.getCenter());
+                double distance = direction.getLength();
 
-            // Avoid division by zero and skip very far boids
-            if (distance > 0 && distance < visionRadius) {
-                direction.scale(1 / (distance * distance)); // Weight inversely by squared distance
-                separationVector = separationVector.add(direction);
+                // Avoid division by zero and skip very far boids
+                if (distance > 0 && distance < visionRadius) {
+                    direction.scale(1 / (distance * distance)); // Weight inversely by squared distance
+                    separationVector = separationVector.add(direction);
+                }
             }
         }
 
