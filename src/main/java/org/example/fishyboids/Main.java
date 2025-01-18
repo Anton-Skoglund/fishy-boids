@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.example.fishyboids.Body.DebugBody;
 import org.example.fishyboids.Body.ProceduralBody;
@@ -51,7 +54,12 @@ public class Main extends Application {
         createFishes();
 
         for(int i = 0; i < 10; i++){
-            Barrier barrier = new Barrier(random.nextDouble() * WIDTH, random.nextDouble() * HEIGHT, 100, 100);
+
+            Polygon randomPolygon = generateRandomPolygon((random.nextDouble() * WIDTH), (int) (random.nextDouble() * HEIGHT),200, 100);
+
+            // Create a Barrier with the random polygon
+            Barrier<Polygon> barrier = new Barrier<>(randomPolygon);
+
             drawables.add(barrier);
             barriers.add(barrier);
         }
@@ -213,6 +221,33 @@ public class Main extends Application {
 
         boid.moveBoid(x,y);
     }
+    private static Polygon generateRandomPolygon(double startX, double startY, int numVertices, double stepSize) {
+        Random random = new Random();
+        Polygon polygon = new Polygon();
+
+        double angleStep = 2 * Math.PI / numVertices; // Fixed angle step for uniform distribution
+        double currentAngle = 0; // Random starting angle
+
+        // Generate vertices
+        for (int i = 0; i < numVertices; i++) {
+            double x = startX + Math.cos(currentAngle) * stepSize;
+            double y = startY + Math.sin(currentAngle) * stepSize;
+
+            // Add point to the polygon
+            polygon.getPoints().addAll(x, y);
+
+            // Increment angle
+            currentAngle += angleStep;
+
+            // Randomly adjust step size (optional, small variation)
+            stepSize += random.nextDouble(-0.075 * stepSize, 0.075 * stepSize);
+        }
+
+
+        polygon.setFill(Color.rgb(255, 255 ,255));
+        return polygon;
+    }
+
 
     public static void main(String[] args) {
         launch(args);
